@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QMouseEvent>
 
+#include "particle_object.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class SimulationWindow;
@@ -19,12 +21,11 @@ public:
     ~SimulationWindow();
 
 protected:
-void mousePressEvent(QMouseEvent *event) override;
-
+    void mousePressEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
 
 private:
     Ui::SimulationWindow *ui;
-    QVector<QPoint> m_points;
+    QVector<ParticleObject> m_particles;
 };
 #endif // SIMULATIONWINDOW_H

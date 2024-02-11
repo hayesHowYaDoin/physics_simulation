@@ -6,7 +6,7 @@
 SimulationWindow::SimulationWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::SimulationWindow),
-    m_points {QVector<QPoint>()}
+    m_particles {QVector<ParticleObject>()}
 {
     ui->setupUi(this);
 }
@@ -18,7 +18,8 @@ SimulationWindow::~SimulationWindow()
 
 void SimulationWindow::mousePressEvent(QMouseEvent *event)
 {
-    m_points.append(event->pos());
+    ParticleObject particle(event->pos(), 5);
+    m_particles.append(particle);
     update();
 }
 
@@ -29,8 +30,8 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
     painter.setBrush(QBrush(Qt::green, Qt::SolidPattern));
 
-    for (const auto &point : m_points)
+    for (auto const& particle : m_particles)
     {
-        painter.drawEllipse(point, 50, 50); // center, width, height
+        painter.drawEllipse(particle.getPosition(), particle.getRadius(), particle.getRadius()); // center, width, height
     }
 }
