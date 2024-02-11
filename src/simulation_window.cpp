@@ -1,19 +1,20 @@
 #include <QPainter>
 #include <QTimer>
 
+#include "metadata.h"
 #include "simulation_window.h"
 #include "./ui_simulation_window.h"
+#include "particle.h"
 
 SimulationWindow::SimulationWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::SimulationWindow),
-    m_particles {QVector<ParticleObject>()}
+    ui(new Ui::SimulationWindow)
 {
     ui->setupUi(this);
 
     QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&SimulationWindow::update));
-    timer->start(1000);
+    connect(timer, &QTimer::timeout, this, &SimulationWindow::stepSimulation);
+    timer->start(m_frameRate);
 }
 
 SimulationWindow::~SimulationWindow()
@@ -23,9 +24,11 @@ SimulationWindow::~SimulationWindow()
 
 void SimulationWindow::mousePressEvent(QMouseEvent *event)
 {
-    ParticleObject particle(event->pos(), 5);
-    m_particles.append(particle);
-    update();
+    QPoint point {event->pos()};
+    int radius {5};
+
+    physics::euler::Particle<physics::units::SI> particle {qtParticle::spawnParticle(point, radius)};
+    m_particles.push_back(particle);
 }
 
 void SimulationWindow::paintEvent(QPaintEvent *event)
@@ -37,6 +40,14 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
 
     for (auto const& particle : m_particles)
     {
-        painter.drawEllipse(particle.getPosition(), particle.getRadius(), particle.getRadius()); // center, width, height
+        QPoint point {qtParticle::toQPoint(particle)};
+        qtParticle::Metadata data {std::any_cast<qtParticle::Metadata>(particle.metadata)};
+        painter.drawEllipse(point, data.radius, data.radius); // center, width, height
     }
+}
+
+void SimulationWindow::stepSimulation()
+{
+    m_particles = physics::euler::step(m_particles, physics::units::time::milliseconds<double>(m_frameRate));
+    update();
 }

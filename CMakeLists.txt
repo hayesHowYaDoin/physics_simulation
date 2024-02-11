@@ -12,3 +12,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 build_physics_simulation()
+
+target_sources(physics_simulation
+  PRIVATE
+    src/particle.h
+)

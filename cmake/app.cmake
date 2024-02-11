@@ -4,6 +4,14 @@ function(build_physics_simulation)
     find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
+    include(FetchContent)
+    FetchContent_Declare(
+      physics_backend
+      GIT_REPOSITORY https://github.com/hayesHowYaDoin/physics_backend.git
+      GIT_TAG        v0.1.3
+    )
+    FetchContent_MakeAvailable(physics_backend)
+
     set(TS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/physics_simulation_en_US.ts)
 
     set(PROJECT_SOURCES
@@ -40,7 +48,11 @@ function(build_physics_simulation)
         qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
     endif()
 
-    target_link_libraries(physics_simulation PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+    target_link_libraries(physics_simulation
+        PRIVATE
+            Qt${QT_VERSION_MAJOR}::Widgets
+            physics_backend
+    )
 
     # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
     # If you are developing for iOS or macOS you should consider setting an
