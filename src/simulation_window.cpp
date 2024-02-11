@@ -1,4 +1,5 @@
 #include <QPainter>
+#include <QTimer>
 
 #include "simulation_window.h"
 #include "./ui_simulation_window.h"
@@ -9,6 +10,10 @@ SimulationWindow::SimulationWindow(QWidget *parent):
     m_particles {QVector<ParticleObject>()}
 {
     ui->setupUi(this);
+
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&SimulationWindow::update));
+    timer->start(1000);
 }
 
 SimulationWindow::~SimulationWindow()

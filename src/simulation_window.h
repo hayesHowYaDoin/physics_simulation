@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <QTimer>
 
 #include "particle_object.h"
 
