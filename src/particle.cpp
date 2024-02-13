@@ -8,7 +8,7 @@ namespace qtParticle
 namespace
 {
 
-constexpr double PIXELS_PER_METER {4.0};
+constexpr double PIXELS_PER_METER {20.0};
 
 } // namespace
 
