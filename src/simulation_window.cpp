@@ -1,15 +1,14 @@
 #include <QPainter>
 #include <QTimer>
 
-#include "metadata.h"
 #include "simulation_window.h"
-#include "./ui_simulation_window.h"
-#include "particle.h"
+#include "ui_simulation_window.h"
 
 SimulationWindow::SimulationWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::SimulationWindow)
 {
+    setFixedSize(m_windowSize.first, m_windowSize.second);
     ui->setupUi(this);
 
     QTimer* timer = new QTimer(this);
@@ -25,9 +24,9 @@ SimulationWindow::~SimulationWindow()
 void SimulationWindow::mousePressEvent(QMouseEvent *event)
 {
     QPoint point {event->pos()};
-    int radius {5};
+    qtParticle::Pixels radius {5};
 
-    physics::euler::Particle<physics::units::SI> particle {qtParticle::spawnParticle(point, radius)};
+    physics::euler::Particle<physics::units::SI> particle {qtParticle::spawnParticle(point, radius, m_windowSize)};
     m_particles.push_back(particle);
 }
 
@@ -40,7 +39,7 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
 
     for (auto const& particle : m_particles)
     {
-        QPoint point {qtParticle::toQPoint(particle)};
+        QPoint point {qtParticle::toQPoint(particle, m_windowSize)};
         qtParticle::Metadata data {std::any_cast<qtParticle::Metadata>(particle.metadata)};
         painter.drawEllipse(point, data.radius, data.radius); // center, width, height
     }
