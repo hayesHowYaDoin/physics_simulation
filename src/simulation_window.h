@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include <QMouseEvent>
 
+#include "particle.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class SimulationWindow;
@@ -19,6 +21,12 @@ public:
     SimulationWindow(QWidget *parent = nullptr);
     ~SimulationWindow();
 
+    SimulationWindow(const SimulationWindow&) = delete;
+    SimulationWindow& operator=(const SimulationWindow&) = delete;
+
+    SimulationWindow(SimulationWindow&&) = delete;
+    SimulationWindow& operator=(SimulationWindow&&) = delete;
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
@@ -30,5 +38,6 @@ private:
     std::vector<physics::euler::Particle<physics::units::SI>> m_particles;
 
     static constexpr int m_frameRate {33};  // Approximately 30fps
+    static constexpr std::pair<qtParticle::Pixels, qtParticle::Pixels> m_windowSize {800, 600};
 };
 #endif // SIMULATIONWINDOW_H
