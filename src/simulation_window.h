@@ -36,6 +36,7 @@ private:
     
     Ui::SimulationWindow *ui;
     std::vector<physics::euler::Particle<physics::units::SI>> m_particles;
+    physics::usecases::Polygon2D<physics::units::SI::Length> m_constraint;
 
     static constexpr int m_frameRate {33};  // Approximately 30fps
     static constexpr std::pair<qtParticle::Pixels, qtParticle::Pixels> m_windowSize {800, 600};
