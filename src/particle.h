@@ -1,7 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include<cstdint>
+#include <cstdint>
 
 #include "physics_backend.hpp"
 #include <QPoint>
@@ -11,10 +11,21 @@ namespace qtParticle
 
 using Pixels = uint32_t;
 
+struct Color
+{
+    uint16_t r;
+    uint16_t g;
+    uint16_t b;
+};
+
 struct Metadata
 {
-    Pixels radius;
+    Color color;
 };
+
+Pixels metersToPixels(physics::units::SI::Length meters);
+
+physics::units::SI::Length pixelsToMeters(Pixels pixels);
 
 QPoint toQPoint(
     physics::euler::Particle<physics::units::SI> const& particle,

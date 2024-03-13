@@ -8,7 +8,11 @@ function(build_physics_simulation)
     FetchContent_Declare(
       physics_backend
       GIT_REPOSITORY https://github.com/hayesHowYaDoin/physics_backend.git
+<<<<<<< Updated upstream
       GIT_TAG        v0.1.3
+=======
+      GIT_TAG        v0.3.1
+>>>>>>> Stashed changes
     )
     FetchContent_MakeAvailable(physics_backend)
 
