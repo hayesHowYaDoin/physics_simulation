@@ -47,7 +47,7 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
 
     for (auto const& particle : m_particles)
     {
-        QPoint point {qtParticle::toQPoint(particle, m_windowSize)};
+        QPoint point {qtParticle::toQPoint(particle.position, m_windowSize)};
         qtParticle::Pixels radius {qtParticle::metersToPixels(particle.radius)};
 
         qtParticle::Metadata data {std::any_cast<qtParticle::Metadata>(particle.metadata)};

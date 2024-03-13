@@ -1,6 +1,7 @@
+#include <algorithm>
 #include <cmath>
 #include <random>
-#include <unordered_set>
+#include <vector>
 
 #include "particle.h"
 
@@ -22,15 +23,12 @@ Color generateSaturatedColor()
         return static_cast<decltype(std::declval<Color>().r)>(colorDist(gen));
     };
 
-    std::uniform_int_distribution<> indexDist(0, 2);
-    auto indexGen = [&indexDist](){
-        static std::unordered_set<size_t> picked;
+    std::vector<size_t> remainingIndices {0, 1, 2};
+    auto indexGen = [&remainingIndices](){
+        std::uniform_int_distribution<> indexDist(0, remainingIndices.size() - 1);
+        size_t index {remainingIndices.at(indexDist(gen))};
 
-        size_t index {static_cast<size_t>(indexDist(gen))};
-        while(picked.contains(index))
-            index = static_cast<size_t>(indexDist(gen));
-
-        picked.insert(index);
+        remainingIndices.erase(std::remove(remainingIndices.begin(), remainingIndices.end(), index), remainingIndices.end());
         return index;
     };
 
@@ -45,12 +43,12 @@ Color generateSaturatedColor()
 
 Pixels metersToPixels(physics::units::SI::Length meters)
 {
-    return meters.to<double>() / PIXELS_PER_METER;
+    return meters.to<double>() * PIXELS_PER_METER;
 }
 
 physics::units::SI::Length pixelsToMeters(Pixels pixels)
 {
-    return physics::units::SI::Length(pixels * PIXELS_PER_METER);
+    return physics::units::SI::Length(pixels / PIXELS_PER_METER);
 }
 
 QPoint toQPoint(
