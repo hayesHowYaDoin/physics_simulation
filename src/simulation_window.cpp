@@ -4,9 +4,17 @@
 #include "simulation_window.h"
 #include "ui_simulation_window.h"
 
+using namespace physics::units::literals;
+
 SimulationWindow::SimulationWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::SimulationWindow)
+    ui(new Ui::SimulationWindow),
+    m_constraint {{
+        qtParticle::toPositionVector({0, 0}, m_windowSize),
+        qtParticle::toPositionVector({m_windowSize.first, 0}, m_windowSize),
+        qtParticle::toPositionVector({m_windowSize.first, m_windowSize.second}, m_windowSize),
+        qtParticle::toPositionVector({0, m_windowSize.second}, m_windowSize),
+      }}
 {
     setFixedSize(m_windowSize.first, m_windowSize.second);
     ui->setupUi(this);
@@ -24,7 +32,7 @@ SimulationWindow::~SimulationWindow()
 void SimulationWindow::mousePressEvent(QMouseEvent *event)
 {
     QPoint point {event->pos()};
-    qtParticle::Pixels radius {5};
+    qtParticle::Pixels radius {20};
 
     physics::euler::Particle<physics::units::SI> particle {qtParticle::spawnParticle(point, radius, m_windowSize)};
     m_particles.push_back(particle);
@@ -39,7 +47,7 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
 
     for (auto const& particle : m_particles)
     {
-        QPoint point {qtParticle::toQPoint(particle, m_windowSize)};
+        QPoint point {qtParticle::toQPoint(particle.position, m_windowSize)};
         qtParticle::Metadata data {std::any_cast<qtParticle::Metadata>(particle.metadata)};
         painter.drawEllipse(point, data.radius, data.radius); // center, width, height
     }
@@ -47,6 +55,6 @@ void SimulationWindow::paintEvent(QPaintEvent *event)
 
 void SimulationWindow::stepSimulation()
 {
-    m_particles = physics::euler::step(m_particles, physics::units::time::milliseconds<double>(m_frameRate));
+    m_particles = physics::euler::step(m_particles, m_constraint, physics::units::time::milliseconds<double>(m_frameRate));
     update();
 }

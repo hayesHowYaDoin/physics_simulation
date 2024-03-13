@@ -17,7 +17,11 @@ struct Metadata
 };
 
 QPoint toQPoint(
-    physics::euler::Particle<physics::units::SI> const& particle,
+    physics::domain::PositionVector2D<physics::units::SI::Length> const& position,
+    std::pair<Pixels, Pixels> const& windowSize);
+
+physics::domain::PositionVector2D<physics::units::SI::Length> toPositionVector(
+    QPoint const& position,
     std::pair<Pixels, Pixels> const& windowSize);
 
 physics::euler::Particle<physics::units::SI> spawnParticle(
