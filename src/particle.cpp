@@ -54,11 +54,11 @@ physics::units::SI::Length pixelsToMeters(Pixels pixels)
 }
 
 QPoint toQPoint(
-    physics::euler::Particle<physics::units::SI> const& particle,
+    physics::domain::PositionVector2D<physics::units::SI::Length> const& position,
     std::pair<Pixels, Pixels> const& windowSize)
 {
-    auto x_m {particle.position.getX<physics::units::meters<double>>()};
-    auto y_m {particle.position.getY<physics::units::meters<double>>()};
+    auto x_m {position.getX<physics::units::meters<double>>()};
+    auto y_m {position.getY<physics::units::meters<double>>()};
 
     Pixels x_px {static_cast<Pixels>(std::floor(windowSize.first - x_m.to<double>() * PIXELS_PER_METER))};
     Pixels y_px {static_cast<Pixels>(std::floor(windowSize.second - y_m.to<double>() * PIXELS_PER_METER))};
