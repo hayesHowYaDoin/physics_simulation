@@ -66,6 +66,22 @@ QPoint toQPoint(
     return QPoint(x_px, y_px);
 }
 
+physics::domain::PositionVector2D<physics::units::SI::Length> toPositionVector(
+    QPoint const& position,
+    std::pair<Pixels, Pixels> const& windowSize)
+{
+    using namespace physics::units;
+    using namespace physics::units::literals;
+
+    Pixels x_px {static_cast<Pixels>(position.x())};
+    Pixels y_px {static_cast<Pixels>(position.y())};
+
+    meters<double> x_m {(windowSize.first - x_px) / PIXELS_PER_METER};
+    meters<double> y_m {(windowSize.second - y_px) / PIXELS_PER_METER};
+
+    return physics::domain::Vector2D::fromComponents(x_m, y_m);
+}
+
 physics::euler::Particle<physics::units::SI> spawnParticle(
     QPoint const& position,
     Pixels radius,
